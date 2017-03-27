@@ -1,9 +1,10 @@
 <?php
 namespace Webird;
 
-use Phalcon\DI,
-    Phalcon\Mvc\ModuleDefinitionInterface,
-    Webird\Mvc\View;
+use Phalcon\DI;
+use Phalcon\Mvc\ModuleDefinitionInterface;
+use Phalcon\Events\Manager as EventsManager;
+use Webird\Mvc\View;
 
 /**
  * Module
@@ -25,8 +26,15 @@ abstract class Module implements ModuleDefinitionInterface
             $view->setPartialsDir('_partials/');
 
             $view->registerEngines([
-                '.volt' => 'voltShared'
+                '.volt' => 'voltShared',
             ]);
+
+            if (DEVELOPING) {
+                $eventsManager = new EventsManager();
+                $eventsManager->attach('view', $this->getDevel());
+                $view->setEventsManager($eventsManager);
+            }
+
             return $view;
         };
     }

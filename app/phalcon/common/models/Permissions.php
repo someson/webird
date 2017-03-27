@@ -1,9 +1,9 @@
 <?php
 namespace Webird\Models;
 
-use Phalcon\Validation,
-    Phalcon\Validation\Validator\Regex as RegexValidator,
-    Webird\Mvc\Model;
+use Phalcon\Validation;
+use Phalcon\Validation\Validator\Regex as RegexValidator;
+use Webird\Mvc\Model;
 
 /**
  * Permissions
@@ -56,7 +56,7 @@ class Permissions extends Model
             'bind' => [
                 'namespace' => $matches[1],
                 'resource'  => $matches[2],
-                'action'    => $matches[3]
+                'action'    => $matches[3],
             ]
         ]);
     }
@@ -89,15 +89,15 @@ class Permissions extends Model
 
         $validator->add('namespace', new RegexValidator([
             'pattern' => '/^([a-z]*)$/',
-            'message' => $translate->gettext('Invalid namespace.')
+            'message' => $translate->gettext('Invalid namespace.'),
         ]));
         $validator->add('resource', new RegexValidator([
             'pattern' => '/^([a-zA-Z]+)$/',
-            'message' => $translate->gettext('Invalid resource.')
+            'message' => $translate->gettext('Invalid resource.'),
         ]));
         $validator->add('action', new RegexValidator([
             'pattern' => '/^([a-zA-Z]+)$/',
-            'message' => $translate->gettext('Invalid action.')
+            'message' => $translate->gettext('Invalid action.'),
         ]));
 
         return $this->validate($validator);
@@ -109,7 +109,7 @@ class Permissions extends Model
     public function initialize()
     {
         $this->belongsTo('rolesId', 'Webird\Models\Roles', 'id', [
-            'alias' => 'role'
+            'alias' => 'role',
         ]);
     }
 }

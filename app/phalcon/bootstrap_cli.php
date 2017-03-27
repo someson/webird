@@ -1,8 +1,7 @@
 <?php
-use Phalcon\DI,
-    Phalcon\PhalconDebug,
-    Phalcon\Exception As PhalconException,
-    Webird\Cli\Exception\ArgumentValidationException;
+use Phalcon\DI;
+use Phalcon\Exception As PhalconException;
+use Webird\Cli\Exception\ArgumentValidationException;
 
 if (php_sapi_name() !== "cli") {
     error_log('Error: The CLI interface is not being called from the command line.');
@@ -30,15 +29,12 @@ if (!file_exists($config->path->tmpDir)) {
     mkdir($config->path->tmpDir);
 }
 
-if (DEVELOPING) {
-    class_alias('\Webird\Debug', '\Dbg', true);
-}
 try {
     $console = $di->getConsole()
         ->handle([
             'module'     => 'cli',
             'defaultCmd' => 'server',
-            'params'     => $argv
+            'params'     => $argv,
         ]);
 }
 catch (PhalconException $e) {

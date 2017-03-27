@@ -26,17 +26,18 @@
       <a href="{{ url('features/websocket') }}" class="btn btn-primary">{{ t('Websocket') }}</a>
       <a href="{{ url('features/postcss') }}" class="btn btn-primary">{{ t('PostCSS') }}</a>
       <a href="{{ url('features/fetch') }}" class="btn btn-primary">{{ t('Fetch API with async/await') }}</a>
+      <a href="{{ url('features/pdfviewer') }}" class="btn btn-primary">{{ t('PDF.js viewer') }}</a>
     </div>
   </div>
   <div class="row top7">
     <div class="col-md-6">
       <h3>{{t('Tools')}}</h3>
+
       {% if DEVELOPING %}
-        <a href="javascript:void(0)" class="btn btn-primary" onclick="wbdebug.toggle()">{{ t('Debug Panel') | escape }}</a>
+        <a href="javascript:void(0)" class="btn btn-primary" onclick="devel.toggle()">{{ t('Devel Panel') | escape }}</a>
       {% else %}
         Debug Panel is not available in dist environment
       {% endif %}
     </div>
   </div>
-  {% if DEVELOPING %}<!--DEBUG_PANEL-->{% endif %}
 </div>

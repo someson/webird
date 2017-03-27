@@ -1,0 +1,30 @@
+:root {
+  --html__font-family: arial, sans-serif;
+  --html__font-size: 13px;
+  --html__color: black;
+
+  --text-normal--color: black;
+  --text-white-color: white;
+  --text-active--color: #008000;
+  --text-action--color: #4970b7;
+  --text-action--color--hover: #404040;
+  --text-action--color--disabled: #babcc0;
+  --text-match--color: #ed9e37;
+  --text-error--color: #c00;
+
+  --region__background--color--white: white;
+  --region__background--color--light: #f7f8fa;
+  --region__background--color--medium: #ededed;
+  --region__background--color--dark: #505050;
+  --region__border--color--light: #e5e5e6;
+  --region__border--color--medium: #ddddde;
+  --region__border--color--dark: #c3c1c5;
+
+  --group__head-text--color: #505050;
+  --group__head-collapser--color: #69798B;
+  --group__divider-internal--color: #f1f1f2;
+  --group__border--color: #e3e3e4;
+
+  --table__tr__background--color--even: #f5f5f5;
+  --table__tr__background--color--odd: #fff;
+}

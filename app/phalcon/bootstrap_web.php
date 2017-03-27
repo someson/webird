@@ -1,6 +1,6 @@
 <?php
-use Phalcon\DI,
-    Phalcon\Mvc\Application;
+use Phalcon\DI;
+use Phalcon\Mvc\Application;
 
 if (!defined('ENV')) {
   error_log('Error: The application ENV constant is not set.');
@@ -23,7 +23,6 @@ switch (ENV)
     case DEV_ENV:
         error_reporting(E_ALL);
         ini_set("display_errors", 1);
-        (new Phalcon\Debug)->listen();
         break;
     // case 'test':
     //     ini_set("display_errors", 0);
@@ -31,9 +30,9 @@ switch (ENV)
     //     error_reporting(E_ALL);
     //     break;
     case DIST_ENV:
+        error_reporting(E_ALL);
         ini_set("display_errors", 0);
         ini_set("log_errors", 1);
-        error_reporting(E_ALL);
         break;
     default:
         error_log('Error: The application ENV constant is not set correctly.');
@@ -51,16 +50,12 @@ if (!file_exists($config->path->tmpDir)) {
     mkdir($config->path->tmpDir);
 }
 
-if (DEVELOPING) {
-    class_alias('\Webird\Debug', '\Dbg', true);
-}
-
 // Handle the request and inject DI
 $application = new Application($di);
 $application->registerModules([
     'web'   => ['className' => 'Webird\Modules\Web\Module'],
     'admin' => ['className' => 'Webird\Modules\Admin\Module'],
-    'api'   => ['className' => 'Webird\Modules\Api\Module']
+    'api'   => ['className' => 'Webird\Modules\Api\Module'],
 ]);
 
 try {

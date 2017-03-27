@@ -1,12 +1,12 @@
 <?php
 namespace Webird\Modules\Cli\Tasks;
 
-use Phalcon\DI,
-    Phalcon\Mvc\View\Engine\Volt\Compiler as Compiler,
-    Phalcon\Mvc\View\Engine\Volt,
-    Webird\CLI\Task,
-    Webird\Locale\Compiler as LocaleCompiler,
-    Webird\Locale\CompilerException as LocaleCompilerException;
+use Phalcon\DI;
+use Phalcon\Mvc\View\Engine\Volt\Compiler as Compiler;
+use Phalcon\Mvc\View\Engine\Volt;
+use Webird\CLI\Task;
+use Webird\Locale\Compiler as LocaleCompiler;
+use Webird\Locale\CompilerException as LocaleCompilerException;
 
 /**
  * Task for Build
@@ -23,9 +23,9 @@ class BuildTask extends Task
             'title' => 'Build system',
             'args' => [
                 'required' => [],
-                'optional' => []
+                'optional' => [],
             ],
-            'opts' => []
+            'opts' => [],
         ]);
 
         // Fix for missing services in CLI services.  If a service is missing then it will cause compiled Volt
@@ -257,6 +257,7 @@ WEBIRD_ENTRY;
         copy("$devDir/package.json", $buildDir . 'package.json');
 
         `cp -R $appDir/theme/assets {$buildDir}public/assets`;
+        `cp -R $appDir/static {$buildDir}public/static`;
 
         copy("$etcDir/schema.sql", $buildDir . 'etc/schema.sql');
     }
@@ -323,7 +324,7 @@ WEBIRD_ENTRY;
                     'locale'         => $locale,
                     'domains'        => $this->config->locale->domains,
                     'localeDir'      => $this->config->path->localeDir,
-                    'localeCacheDir' => $localeCacheDir
+                    'localeCacheDir' => $localeCacheDir,
                 ]);
             } catch (LocaleCompilerException $e) {
                 error_log($e->getMessage());

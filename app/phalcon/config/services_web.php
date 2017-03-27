@@ -1,15 +1,15 @@
 <?php
-use Phalcon\Mvc\Dispatcher,
-    Phalcon\Flash\Direct as Flash,
-    Phalcon\Http\Response as HttpResponse,
-    Phalcon\Http\Response\Cookies as HttpCookies,
-    Phalcon\Http\Request as HttpRequest,
-    Phalcon\Session\Bag as SessionBag,
-    League\OAuth2\Client\Provider\Google as GoogleProvider,
-    Webird\Plugins\DispatcherSecurity,
-    Webird\Mvc\Router as Router,
-    Webird\Auth\Auth,
-    Webird\Session\Adapter\Database as DatabaseSession;
+use Phalcon\Mvc\Dispatcher;
+use Phalcon\Flash\Direct as Flash;
+use Phalcon\Http\Response as HttpResponse;
+use Phalcon\Http\Response\Cookies as HttpCookies;
+use Phalcon\Http\Request as HttpRequest;
+use Phalcon\Session\Bag as SessionBag;
+use Phalcon\Session\Adapter\Database as DatabaseSession;
+use League\OAuth2\Client\Provider\Google as GoogleProvider;
+use Webird\Plugins\DispatcherSecurity;
+use Webird\Mvc\Router as Router;
+use Webird\Auth\Auth;
 
 /**
  *
@@ -118,7 +118,7 @@ $di->set('googleOauthProvider', function () {
         'clientId'     => $configProvider->clientId,
         'clientSecret' => $configProvider->clientSecret,
         'redirectUri'  => $this->getUrl()->get('signin/oauth/google'),
-        'hostedDomain' => "$proto://$domain"
+        'hostedDomain' => "$proto://$domain",
     ]);
 });
 
@@ -129,6 +129,6 @@ $di->set('flash', function() {
     return new Flash([
         'error' => 'alert alert-danger',
         'success' => 'alert alert-success',
-        'notice' => 'alert alert-info'
+        'notice' => 'alert alert-info',
     ]);
 });

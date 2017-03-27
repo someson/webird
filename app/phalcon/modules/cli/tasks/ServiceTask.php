@@ -1,17 +1,17 @@
 <?php
 namespace Webird\Modules\Cli\Tasks;
 
-use ZMQ,
-    PDO,
-    React\ZMQ\Context as ZMQContext,
-    React\EventLoop\Factory as EventLoopFactory,
-    Ratchet\Server\IoServer,
-    Ratchet\Http\HttpServer,
-    Ratchet\WebSocket\WsServer,
-    Ratchet\Session\SessionProvider,
-    Symfony\Component\HttpFoundation\Session\Storage\Handler,
-    Webird\CLI\Task,
-    Webird\Modules\Cli\Chat;
+use ZMQ;
+use PDO;
+use React\ZMQ\Context as ZMQContext;
+use React\EventLoop\Factory as EventLoopFactory;
+use Ratchet\Server\IoServer;
+use Ratchet\Http\HttpServer;
+use Ratchet\WebSocket\WsServer;
+use Ratchet\Session\SessionProvider;
+use Symfony\Component\HttpFoundation\Session\Storage\Handler;
+use Webird\CLI\Task;
+use Webird\Modules\Cli\Chat;
 
 /**
  * Task for websocket
@@ -38,11 +38,11 @@ class ServiceTask extends Task
             'title' => 'Start the websocket listener (start this through the server command).',
             'args' => [
                 'required' => [],
-                'optional' => []
+                'optional' => [],
             ],
             'opts' => [
                 'p|wsport:'    => "websockets listen on port (default is {$config->app->wsPort}).",
-                'z|zmqport:' => "zmq listen on port (default is {$config->app->zmqPort})."
+                'z|zmqport:' => "zmq listen on port (default is {$config->app->zmqPort}).",
             ]
         ]);
 

@@ -7,10 +7,11 @@ commons:
   vue:
   - vue.simple
   - vue.vuex
+  - pdf-viewer
 browsers:
 - "last 5 Chrome versions"
 - "last 5 Firefox versions"
-- "Explorer > 11"
+- "Explorer >= 11"
 - "iOS >= 8"
 - "> 2% in US"
 constants:

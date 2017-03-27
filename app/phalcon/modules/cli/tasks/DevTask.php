@@ -1,11 +1,11 @@
 <?php
 namespace Webird\Modules\Cli\Tasks;
 
-use Phalcon\Mvc\View\Engine\Volt\Compiler as Compiler,
-    Phalcon\Mvc\View\Engine\Volt,
-    React\EventLoop\Factory as EventLoopFactory,
-    Webird\CLI\Process,
-    Webird\CLI\Task;
+use Phalcon\Mvc\View\Engine\Volt\Compiler as Compiler;
+use Phalcon\Mvc\View\Engine\Volt;
+use React\EventLoop\Factory as EventLoopFactory;
+use Webird\CLI\Process;
+use Webird\CLI\Task;
 
 /**
  * Task for Build
@@ -32,9 +32,9 @@ HELPMSG;
             'help' => $help,
             'args' => [
                 'required' => [],
-                'optional' => []
+                'optional' => [],
             ],
-            'opts' => []
+            'opts' => [],
         ]);
 
         $devDir = $config->dev->path->devDir;
@@ -65,9 +65,9 @@ HELPMSG;
             'title' => 'Generate a dev (development) nginx configuration',
             'args' => [
                 'required' => [],
-                'optional' => []
+                'optional' => [],
             ],
-            'opts' => []
+            'opts' => [],
         ]);
 
         echo $this->getNginxConfig();

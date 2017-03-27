@@ -1,10 +1,10 @@
 <?php
 namespace Webird\Models;
 
-use Phalcon\Validation,
-    Phalcon\Validation\Validator\Uniqueness as UniquenessValidator,
-    Webird\Mvc\Model,
-    Webird\Mvc\Model\Behavior\Blameable as BlameableBehavior;
+use Phalcon\Validation;
+use Phalcon\Validation\Validator\Uniqueness as UniquenessValidator;
+use Webird\Mvc\Model;
+use Webird\Mvc\Model\Behavior\Blameable as BlameableBehavior;
 
 /**
  * Webird\Models\Users
@@ -154,7 +154,7 @@ class Users extends Model
         $validator->add('email', new UniquenessValidator([
             'message' => $this->getDI()
                 ->getTranslate()
-                ->gettext('The email is already registered.')
+                ->gettext('The email is already registered.'),
         ]));
 
         return $this->validate($validator);
@@ -170,33 +170,33 @@ class Users extends Model
         $this->addSoftDeleteBehavior([
             'field'   => 'deleted',
             'value'   => 'Y',
-            'cascade' => true
+            'cascade' => true,
         ]);
 
         $this->belongsTo('rolesId', 'Webird\Models\Roles', 'id', [
             'alias' => 'role',
-            'reusable' => true
+            'reusable' => true,
         ]);
 
         $this->hasMany('id', 'Webird\Models\SuccessSignins', 'usersId', [
             'alias' => 'successSignins',
             'foreignKey' => [
-                'message' => 'User cannot be deleted because he/she has activity in the system'
-            ]
+                'message' => 'User cannot be deleted because he/she has activity in the system',
+            ],
         ]);
 
         $this->hasMany('id', 'Webird\Models\PasswordChanges', 'usersId', [
             'alias' => 'passwordChanges',
             'foreignKey' => [
-                'message' => 'User cannot be deleted because he/she has activity in the system'
-            ]
+                'message' => 'User cannot be deleted because he/she has activity in the system',
+            ],
         ]);
 
         $this->hasMany('id', 'Webird\Models\ResetPasswords', 'usersId', [
             'alias' => 'resetPasswords',
             'foreignKey' => [
-                'message' => 'User cannot be deleted because he/she has activity in the system'
-            ]
+                'message' => 'User cannot be deleted because he/she has activity in the system',
+            ],
         ]);
     }
 }

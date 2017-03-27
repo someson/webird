@@ -1,9 +1,9 @@
 <?php
 namespace Webird\Controllers;
 
-use Phalcon\Mvc\Controller,
-    Phalcon\Http\Response as Response,
-    Webird\Mvc\Controller;
+use Phalcon\Mvc\Controller;
+use Phalcon\Http\Response as Response;
+use Webird\Mvc\Controller;
 
 /**
  *
@@ -263,7 +263,7 @@ class RESTController extends Controller
             503 => 'Service Unavailable',
             504 => 'Gateway Timeout',
             505 => 'HTTP Version Not Supported',
-            509 => 'Bandwidth Limit Exceeded'
+            509 => 'Bandwidth Limit Exceeded',
         ];
 
         $result = (isset($codes[$code])) ?

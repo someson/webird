@@ -1,29 +1,30 @@
 <?php
-use Phalcon\Loader,
-    Phalcon\Crypt,
-    Phalcon\Filter,
-    Phalcon\Security,
-    Phalcon\Escaper,
-    Phalcon\Tag,
-    Phalcon\Annotations\Adapter\Memory as AnnotationsAdapter,
-    Phalcon\Mvc\Model,
-    Phalcon\Mvc\Model\Manager as ModelManager,
-    Phalcon\Mvc\Model\MetaData\Memory as ModelMetaData,
-    Phalcon\Mvc\Model\Transaction\Manager as TransactionManager,
-    Phalcon\Mvc\Url,
-    Phalcon\Mvc\View\Engine\Volt,
-    Phalcon\Events\Manager as EventsManager,
-    Phalcon\Db\Adapter\Pdo\Mysql as DbAdapter,
-    Phalcon\Logger\Multiple as MultipleStreamLogger,
-    Phalcon\Logger\Adapter\File as FileLogger,
-    Phalcon\Logger\Adapter\Firephp as FirephpLogger,
-    Webird\Mvc\View\Simple as ViewSimple,
-    Webird\Acl\Acl,
-    Webird\Locale\Locale,
-    Webird\Locale\Gettext,
-    Webird\Mailer\Manager as MailManager,
-    Webird\Logger\Adapter\Error as ErrorLogger,
-    Webird\Logger\Adapter\Firelogger as Firelogger;
+use Phalcon\Loader;
+use Phalcon\Crypt;
+use Phalcon\Filter;
+use Phalcon\Security;
+use Phalcon\Escaper;
+use Phalcon\Tag;
+use Phalcon\Annotations\Adapter\Memory as AnnotationsAdapter;
+use Phalcon\Mvc\Model;
+use Phalcon\Mvc\Model\Manager as ModelManager;
+use Phalcon\Mvc\Model\MetaData\Memory as ModelMetaData;
+use Phalcon\Mvc\Model\Transaction\Manager as TransactionManager;
+use Phalcon\Mvc\Url;
+use Phalcon\Mvc\View\Engine\Volt;
+use Phalcon\Events\Manager as EventsManager;
+use Phalcon\Db\Adapter\Pdo\Mysql as DbAdapter;
+use Phalcon\Logger\Multiple as MultipleStreamLogger;
+use Phalcon\Logger\Adapter\File as FileLogger;
+use Phalcon\Logger\Adapter\Firephp as FirephpLogger;
+use Webird\Mvc\View\Simple as ViewSimple;
+use Webird\Plugins\Devel as DevelPlugin;
+use Webird\Acl\Acl;
+use Webird\Locale\Locale;
+use Webird\Locale\Gettext;
+use Webird\Mailer\Manager as MailManager;
+use Webird\Logger\Adapter\Error as ErrorLogger;
+use Webird\Logger\Adapter\Firelogger as Firelogger;
 
 /**
  *
@@ -146,13 +147,34 @@ $di->set('loader', function() {
 $di->setShared('db', function() {
     $config = $this->getConfig();
 
-    return new DbAdapter([
+    $connection = new DbAdapter([
         'host'     => $config->database->host,
         'username' => $config->database->username,
         'password' => $config->database->password,
         'dbname'   => $config->database->dbname,
-        'charset'  => 'utf8'
+        'charset'  => 'utf8',
     ]);
+
+    if (DEVELOPING) {
+        $eventsManager = new EventsManager();
+        $eventsManager->attach('db', $this->getDevel());
+        $connection->setEventsManager($eventsManager);
+    }
+
+    return $connection;
+});
+
+/**
+ *
+ */
+$di->setShared('devel', function() {
+    if (!DEVELOPING) {
+        throw new \Exception('The Debug plugin can only be used in the Development environment.');
+    }
+
+    $devel = new DevelPlugin();
+    $devel->setDI($this);
+    return $devel;
 });
 
 /**
@@ -195,7 +217,7 @@ $di->set('volt', function($view) {
             }
 
             return "{$voltCacheDir}{$templateFrag}.php";
-        }
+        },
     ]);
 
     $compiler = $volt->getCompiler();
@@ -220,7 +242,7 @@ $di->set('viewSimple', function() {
     $view = new ViewSimple();
     $view->setDI($this);
     $view->registerEngines([
-        '.volt' => 'volt'
+        '.volt' => 'volt',
     ]);
     $view->setViewsDir($config->path->viewsSimpleDir);
     return $view;
@@ -270,34 +292,9 @@ $di->setShared('translate', function() {
         'supported'      => $locale->getSupportedLocales(),
         'domains'        => $config->locale->domains,
         'localeDir'      => $config->path->localeDir,
-        'localeCacheDir' => $config->path->localeCacheDir
+        'localeCacheDir' => $config->path->localeCacheDir,
     ]);
     return $gettext;
-});
-
-/**
- *
- */
-$di->setShared('debug', function() {
-    $config = $this->getConfig();
-
-    $logger = new MultipleStreamLogger();
-    switch (ENV) {
-        case DEV_ENV:
-            $logger->push(new ErrorLogger());
-            if ('cli' != php_sapi_name()) {
-                $debugLogFile = str_replace('{{name}}', $config->site->domains[0],
-                    $config->dev->path->debugLog);
-                $fileLogger = new FileLogger($debugLogFile);
-                $fileLogger->getFormatter()->setFormat('%message%');
-                $logger->push($fileLogger);
-
-                $logger->push(new Firelogger());
-                $logger->push(new FirephpLogger(''));
-            }
-        break;
-    }
-    return $logger;
 });
 
 /**

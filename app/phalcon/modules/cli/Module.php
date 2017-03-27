@@ -1,10 +1,10 @@
 <?php
 namespace Webird\Modules\Cli;
 
-use Phalcon\DI,
-    Phalcon\Loader,
-    Phalcon\DiInterface,
-    Webird\Module as ModuleBase;
+use Phalcon\DI;
+use Phalcon\Loader;
+use Phalcon\DiInterface;
+use Webird\Module as ModuleBase;
 
 /**
  * Module for CLI interface applications
@@ -30,7 +30,7 @@ class Module extends ModuleBase
         $loader = new Loader();
         $loader->registerNamespaces([
             __NAMESPACE__ . '\\Tasks' => __DIR__ . '/tasks',
-            __NAMESPACE__             => __DIR__ . '/library'
+            __NAMESPACE__             => __DIR__ . '/library',
         ]);
         $loader->register();
     }

@@ -1,8 +1,8 @@
 <?php
-use Phalcon\Cli\Router,
-    Phalcon\Cli\Dispatcher,
-    Webird\CLI\Console,
-    Webird\Session\Adapter\DatabaseReader as DatabaseSessionReader;
+use Phalcon\Cli\Router;
+use Phalcon\Cli\Dispatcher;
+use Webird\CLI\Console;
+use Webird\Session\Adapter\DatabaseReader as DatabaseSessionReader;
 
 /**
  *
@@ -10,7 +10,7 @@ use Phalcon\Cli\Router,
 $di->setShared('console', function() {
     $console = new Console($this);
     $console->registerModules([
-        'cli' => ['className' => 'Webird\Modules\Cli\Module']
+        'cli' => ['className' => 'Webird\Modules\Cli\Module'],
     ]);
 
     return $console;

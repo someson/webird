@@ -1,11 +1,10 @@
 <?php
 namespace Webird\Modules\Web;
 
-use Phalcon\DI,
-    Phalcon\Loader,
-    Phalcon\DiInterface,
-    Webird\Module as ModuleBase,
-    Webird\DebugPanel;
+use Phalcon\DI;
+use Phalcon\Loader;
+use Phalcon\DiInterface;
+use Webird\Module as ModuleBase;
 
 /**
  * Module for basic web needs
@@ -32,7 +31,7 @@ class Module extends ModuleBase
         $loader->registerNamespaces([
             __NAMESPACE__ . '\\Controllers' => __DIR__ . '/controllers',
             __NAMESPACE__ . '\\Forms'       => __DIR__ . '/forms',
-            __NAMESPACE__                   => __DIR__ . '/library'
+            __NAMESPACE__                   => __DIR__ . '/library',
         ]);
         $loader->register();
     }
@@ -48,9 +47,5 @@ class Module extends ModuleBase
             ->setDefaultNamespace(__NAMESPACE__ . '\\Controllers');
 
         $di->setShared('view', $this->getViewFunc());
-
-        if (DEVELOPING) {
-            $debugPanel = new DebugPanel($di);
-        }
     }
 }

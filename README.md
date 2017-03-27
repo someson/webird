@@ -16,6 +16,7 @@ Node.js is required for development only and is not required once a project has 
 * [nginx](http://nginx.org/)
 * [Composer](https://getcomposer.org/)
 * [Nodejs](https://nodejs.org)
+* [Yarn](https://github.com/yarnpkg/yarn)
 * [Ratchet](http://socketo.me/)
 * [gettext](http://www.gnu.org/software/gettext/gettext.html)
 * [MariaDB](https://mariadb.org/) 10.1
@@ -38,9 +39,7 @@ Node.js is required for development only and is not required once a project has 
 * PHP >= 7.0
 * Phalcon >= 3.0.0
 * MariaDB >= 10.1
-* Node.js >= 5.0
-
-**Note:** Node.js 5 is required because it is the first version to provide NPM 3 and it will remove the possibility of Javascript `instanceof` failing to identify an object because the object came from a different identical submodule.
+* Node.js >= 7.0
 
 **Installation Instructions:**
 ```
@@ -49,7 +48,7 @@ Node.js is required for development only and is not required once a project has 
 # System provisioning
 sudo ./setup/provision-system.sh ubuntu-xenial
 
-# Local install of npm, bower and composer packages
+# Local install of NPM and Composer packages
 ./setup/install-local-packages.sh
 
 # mariadb setup
@@ -75,18 +74,11 @@ echo -e "\n127.0.0.1 dev.webird.io" | sudo tee -a /etc/hosts
 ```
 
 ### Poedit Localization editor:
-In order to modify the localization messages you will need to configure the [Poedit](http://poedit.net/) GNU gettext frontend since it does not come with the tools necessary to parse Nunjucks and Volt templates.  The provision script will have installed a nodejs script called xgettext-template.
+In order to modify the localization messages you will need to configure the [Poedit](http://poedit.net/) GNU gettext frontend since it does not come with the tools necessary to parse Volt and Vue templates.  The provision script will have installed a nodejs script called xgettext-template.
 
 ##### Poedit Configuration Instructions:
 Go to File - Preferences... in Poedit and add a new parser in the Parsers tab:
 
-* **Nunjucks**
-  * Language: `Nunjucks`
-  * List of extensions...: `*.njk`
-  * Parser Command: `xgettext-template -L Swig --force-po -o %o %C %K %F`
-  * An item in keywords list: `-k %k`
-  * An item in input files list: `%f`
-  * Source code charset: `--from-code=%c`
 * **Volt**
   * Language: `Volt`
   * List of extensions...: `*.volt`
@@ -94,7 +86,8 @@ Go to File - Preferences... in Poedit and add a new parser in the Parsers tab:
   * An item in keywords list: `-k %k`
   * An item in input files list: `%f`
   * Source code charset: `--from-code=%c`
-
+* **Vue**
+  * TODO
 
 ## Development Usage:
 1. Run server processes: `./dev/run [server]` and wait until webpack-dev-server has finished building
@@ -106,9 +99,9 @@ If you see the local host file not configured page then add `127.0.0.1 dev.webir
 
 #### Create dist environment:
 1. Copy `./etc/templates/dist_config.yml` to `./etc/dist.yml`
-2. Configure `./etc/dist.yml` to override settings from `./etc/dist_defaults.yml`.  These two files will be merged to form `./dist/etc/config.yml`.
+2. Configure `./etc/dist.yml` to override settings from `./etc/dist_defaults.yml`.  These two files will be merged to form `./build/etc/config.yml`.
 3. Create the dist environment: `./dev/run build`
-4. Enter into dist directory `cd ./dist`
+4. Enter into dist directory `cd ./build`
 5. Add `127.0.0.1 dist.webird.io` to `/etc/hosts`
 6. Follow following instructions within dist environments
 
@@ -141,10 +134,10 @@ The nginx configuration must be rebuilt if the distribution environment director
 │   ├── config/
 │   └── modules/
 └── webpack
-    ├── config.json (you can make this .json, .yml, .js)
+    ├── config.yml (you can make this .json, .yml, .js)
     ├── commons (common code to be run by multiple entry points)
     ├── entries (specific code entry points)
-    └── modules (custom commonjs modules)
+    └── modules (general ES2016 and commonjs modules)
 ```
 
 ```
@@ -154,12 +147,9 @@ The nginx configuration must be rebuilt if the distribution environment director
 │   └── index.php (Web entry for dev environment)
 ├── cmd_overrides/ (dev specific command overrides for CLI interface)
 ├── packages.json (npm configuration)
-├── bower.json (Bower configuration)
 ├── vendor.json (Composer configuration)
-├── gulpfile.js (Gulp streaming build system configuration)
-├── gulpfile.webpack.js (Webpack configuration)
+├── webpack.js (Webpack script)
 ├── node_modules/
-├── bower_components/
 └── vendor/
 ```
 
@@ -167,7 +157,8 @@ The nginx configuration must be rebuilt if the distribution environment director
 ./build
 ├── run (CLI entry for built system)
 ├── public/
-│   └── index.php (Web entry for built system)
+│   ├── index.php (Web entry for built system)
+│   └── static resources copied from app directory
 ├── etc/
 ├── cache-static/
 │   ├── locale/ (localization files in machine readable .mo format)
@@ -184,13 +175,10 @@ The nginx configuration must be rebuilt if the distribution environment director
 └── functions/ (helpers)
 ```
 
-Compare the `./app` directory to a built `./built` directory to notice the differences between the app code and dev environment and the built system.
+Compare the `./app` directory to a built `./build` directory to notice the differences between the app code and dev environment and the built system.
 
 You may also view the build system routine at `app/phalcon/modules/cli/tasks/DevTask.php`
 
 **Note**: The `./built` directory contains only optimized and uglified JS resources and if Ion Cube has been enabled then the build process will use it to protect the PHP code.
 
-### TODO and the WAITING:
-* At the moment only basic websocket support is supported since [Ratchet](http://socketo.me/) does not support the [WAMP](http://wamp.ws/) v2 protocol and newer Javascript libraries such as [Autobahn|JS](http://autobahn.ws/js/) are now WAMP v2 only and the older v1 versions don't play nice with the CommonJS module system.  Ratchet development stalled out with the WAMP v2 feature, but there is hope since the [Thruway](https://github.com/voryx/Thruway) team is building upon the Ratchet code base and is hard at work to suport a WAMP v2 protocol.  There is much colloborative and blessings between the two projects so this looks positive.
-* The Dockerfile is currently not complete.  It currently installs all of the dependencies but fails to start relevant services and it is not yet configuring an initial user.
-* The computed ACL data is not being serialized to disk because there is no current solution for allowing the user ACL permissions to be modified and saved for a built dist system.
+**Note**: A Vue template and single file component gettext extractor does not current exist as it has yet to be made.
